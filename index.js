@@ -22,3 +22,5 @@ app.use("/api/todo", (req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = app;
