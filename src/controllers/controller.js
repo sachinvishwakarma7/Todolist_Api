@@ -3,6 +3,7 @@ const client = require("../config/db");
 const getAllTodo = (req, res) => {
   const query = "SELECT * FROM todo";
   client.query(query, (err, results) => {
+    console.log("error--->", err);
     if (err) {
       return res.status(500).json({ error: "Failed to fetch todos" });
     }
