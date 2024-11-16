@@ -5,11 +5,11 @@ const connectMongoDB = require("./src/config/mongodb");
 const { urlencoded, json } = require("body-parser");
 const router = require("./src/routes/todoRouter");
 
-// connect mogodb
-connectMongoDB();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// connect mogodb
+connectMongoDB();
 
 app.use(cors()); // Use this after the variable declaration
 
