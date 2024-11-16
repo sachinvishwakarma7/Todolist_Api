@@ -4,10 +4,7 @@ const url = process.env.MONGODB_URL;
 
 const connectMongoDB = () => {
   mongoose
-    .connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(url)
     .then(() => {
       console.log("mongo database connected!");
     })
