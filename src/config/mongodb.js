@@ -2,6 +2,8 @@ const { default: mongoose } = require("mongoose");
 
 const url = process.env.MONGODB_URL;
 
+console.log(process.env.MONGODB_URL)
+
 const connectMongoDB = () => {
   mongoose
     .connect(url)
