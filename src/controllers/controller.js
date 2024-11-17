@@ -24,6 +24,23 @@ const getAllTodo = async (req, res) => {
   }
 };
 
+const searchTodos = async (req, res) => {
+  try {
+    const { query } = req.query; // Get the search query from the request
+    // Use MongoDB's regex to perform a case-insensitive search
+    const todos = await Todo.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    res.status(200).json(todos);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching search results" });
+  }
+};
+
 const filterTodos = async (req, res) => {
   try {
     const { priority, completed, category } = req.query;
@@ -222,6 +239,7 @@ const updateTodo = async (req, res) => {
 
 module.exports = {
   getAllTodo,
+  searchTodos,
   filterTodos,
   createTodo,
   deleteTodo,
