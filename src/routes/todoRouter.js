@@ -9,14 +9,19 @@ const {
   filterTodos,
   searchTodos,
 } = require("../controllers/controller");
+const authMiddleware = require("../middleware/authMiddleware");
+const { loginUser, signupUser } = require("../controllers/userController");
 
 // Define routes for /api/todos
-// router.get("/", getAllTodo); // GET request for /api/todos
-router.get("/", getAllTodo); // GET request for /api/todos
-router.get("/search", searchTodos);
-router.get("/filter", filterTodos);
-router.post("/", createTodo); // POST request for /api/todos
-router.delete("/:id", deleteTodo); // DELETE request for /api/todos
-router.put("/:id", updateTodo); // PUT request for /api/todos
+router.get("/todo", authMiddleware, getAllTodo); // GET request for /api/todos
+router.get("/todo/search", authMiddleware, searchTodos);
+router.get("/todo/filter", authMiddleware, filterTodos);
+router.post("/todo", authMiddleware, createTodo); // POST request for /api/todos
+router.delete("/todo/:id", authMiddleware, deleteTodo); // DELETE request for /api/todos
+router.put("/todo/:id", authMiddleware, updateTodo); // PUT request for /api/todos
+
+// User routes
+router.post("/user/login", loginUser);
+router.post("/user/signup", signupUser);
 
 module.exports = router;
