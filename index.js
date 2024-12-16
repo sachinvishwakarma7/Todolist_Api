@@ -19,17 +19,11 @@ const LOCAL_HOST = process.env.LOCAL_HOST;
 // Create HTTP server and integrate with Socket.io
 const httpServer = http.createServer(app);
 
-const allowedOrigins = [LOCAL_HOST];
+// const allowedOrigins = [LOCAL_HOST];
 
 const io = new Server(httpServer, {
   cors: {
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Allow the origin
-      } else {
-        callback(new Error("Not allowed by CORS")); // Block the origin
-      }
-    },
+    origin: LOCAL_HOST,
     methods: ["GET", "POST"],
     transports: ["websocket", "polling"],
     credentials: true, // Enable if cookies or authentication tokens are used
