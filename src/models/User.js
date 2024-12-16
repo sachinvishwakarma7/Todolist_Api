@@ -10,11 +10,15 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true, // Ensure email is unique for each user
+      unique: true,
     },
     password: {
       type: String,
       required: true,
+    },
+    profileImage: {
+      type: String,
+      default: null,
     },
   },
   { timestamps: true }

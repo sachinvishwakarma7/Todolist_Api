@@ -15,7 +15,7 @@ const searchTodos = async (req, res) => {
   try {
     const { query } = req.query;
     const todos = await Todo.find({
-      user: req.user.id, // Ensure the todos belong to the authenticated user
+      user: req.user.id,
       $or: [
         { title: { $regex: query, $options: "i" } },
         { description: { $regex: query, $options: "i" } },
@@ -33,7 +33,7 @@ const filterTodos = async (req, res) => {
   try {
     const { priority, completed, category } = req.query;
 
-    const query = { user: req.user.id }; // Ensure the todos belong to the authenticated user
+    const query = { user: req.user.id };
     if (priority) {
       query.priority = priority;
     }
@@ -66,10 +66,8 @@ const createTodo = async (req, res) => {
       completed,
       category,
       priority,
-      user: req.user.id, // Associate the todo with the authenticated user
+      user: req.user.id,
     };
-
-    console.log("req.user.id", req.user.id);
 
     const todoData = await Todo.create(newTodo);
     res.status(201).json(todoData);
@@ -85,7 +83,7 @@ const deleteTodo = async (req, res) => {
     const deletedTodo = await Todo.findOneAndDelete({
       _id: id,
       user: req.user.id,
-    }); // Only delete todos belonging to the authenticated user
+    });
     if (!deletedTodo) {
       return res.status(404).json({ error: "Todo not found" });
     }
@@ -101,7 +99,7 @@ const updateTodo = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
     const updatedTodo = await Todo.findOneAndUpdate(
-      { _id: id, user: req.user.id }, // Only update todos belonging to the authenticated user
+      { _id: id, user: req.user.id },
       updatedData,
       { new: true, runValidators: true }
     );

@@ -1,31 +1,55 @@
+// Import required modules
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
-const connectMongoDB = require("./src/config/mongodb");
+const http = require("http");
 const { urlencoded, json } = require("body-parser");
-const router = require("./src/routes/todoRouter");
+const { Server } = require("socket.io");
+require("dotenv").config();
 
+// Import custom modules
+const connectMongoDB = require("./src/config/mongodb");
+const router = require("./src/routes/todoRouter");
+const { setupSocket } = require("./src/utils/socketManager");
+
+// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
+const LOCAL_HOST = process.env.LOCAL_HOST || 3000;
 
-// connect mogodb
+// Create HTTP server and integrate with Socket.io
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: LOCAL_HOST, // Replace with the actual client origin
+    methods: ["GET", "POST"],
+    transports: ["websocket", "polling"],
+  },
+});
+
+// Connect to MongoDB
 connectMongoDB();
 
-app.use(cors()); // Use this after the variable declaration
+// Setup Socket.io
+setupSocket(io);
 
-// Middleware to parse incoming requests
-app.use(urlencoded({ extended: false }));
-app.use(json()); // Ensure this is before route handling
+// Middleware
+app.use(cors());
+app.use(urlencoded({ extended: false })); // Parse URL-encoded data
+app.use(json()); // Parse JSON data
 
-app.use("/api",(req, res, next) => {
+// Logging Middleware for API routes
+app.use("/api", (req, res, next) => {
   console.log(`Received a ${req.method} request at ${req.url}`);
-  next();  // This will cause "Cannot set headers after they are sent" because of `res.send()` above.
-},router);
+  next();
+});
 
-// app.use("/api/user/signup", signupUser)
+// API Routes
+app.use("/api", router);
 
-app.listen(PORT, () => {
+// Start the server
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// Export the app for testing or further usage
 module.exports = app;
