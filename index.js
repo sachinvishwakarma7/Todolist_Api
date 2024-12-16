@@ -25,9 +25,10 @@ const io = new Server(httpServer, {
   cors: {
     origin: LOCAL_HOST,
     methods: ["GET", "POST"],
-    transports: ["websocket", "polling"],
+    allowedHeaders: ["Authorization", "Content-Type"], // Specify allowed headers
     credentials: true, // Enable if cookies or authentication tokens are used
   },
+  transports: ["websocket", "polling"],
 });
 
 // Connect to MongoDB
