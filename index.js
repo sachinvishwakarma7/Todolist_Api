@@ -14,15 +14,25 @@ const { setupSocket } = require("./src/utils/socketManager");
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
-const LOCAL_HOST = process.env.LOCAL_HOST || 3000;
+const LOCAL_HOST = process.env.LOCAL_HOST;
 
 // Create HTTP server and integrate with Socket.io
 const httpServer = http.createServer(app);
+
+const allowedOrigins = [LOCAL_HOST];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: LOCAL_HOST, // Replace with the actual client origin
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow the origin
+      } else {
+        callback(new Error("Not allowed by CORS")); // Block the origin
+      }
+    },
     methods: ["GET", "POST"],
     transports: ["websocket", "polling"],
+    credentials: true, // Enable if cookies or authentication tokens are used
   },
 });
 

@@ -8,6 +8,8 @@ const {
 const setupSocket = (io) => {
   io.on("connection", (socket) => {
     // Handle socket events
+    console.log("recovered?", socket.recovered);
+
     socket.on("joinRoom", (room) => {
       console.log(`${socket.id} joined room ${room}`);
       socket.join(room);
