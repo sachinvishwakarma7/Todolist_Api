@@ -19,19 +19,34 @@ const LOCAL_HOST = process.env.LOCAL_HOST;
 // Create HTTP server and integrate with Socket.io
 const httpServer = http.createServer(app);
 
-const allowedOrigins = [LOCAL_HOST, "http://localhost:3000"];
+// const allowedOrigins = [LOCAL_HOST, "http://localhost:3000"];
+
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: (origin, callback) => {
+//       console.log("origin", origin);
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ["GET", "POST"],
+//     allowedHeaders: ["Authorization", "Content-Type"], // Allow these headers
+//     credentials: true,
+//   },
+//   transports: ["websocket", "polling"],
+// });
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://todolist-react-nu-ruddy.vercel.app",
+];
 
 const io = new Server(httpServer, {
   cors: {
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
-    allowedHeaders: ["Authorization", "Content-Type"], // Allow these headers
     credentials: true,
   },
   transports: ["websocket", "polling"],
